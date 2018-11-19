@@ -1,5 +1,7 @@
 {
   "name": "sportSpirit",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
