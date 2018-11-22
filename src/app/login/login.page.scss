@@ -6,8 +6,22 @@ ion-button{
   bottom: 15%;
 }
 
+.mainText{
+
+  color: #22AEE3;
+  margin-top: 40px;
+  padding: 10px;
+  font-size: 44px;
+
+}
+
+.subText{
+  color: #2EAC46;
+  font-size: 20px;
+  line-height: 1;
+  padding: 20px;
+}
+
 img{
-  height: 125%;
   width: 100%;
-  object-fit: cover;
 }

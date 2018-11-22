@@ -1,5 +1,5 @@
 import {Component, NgZone} from '@angular/core';
-import {AlertController, Events} from '@ionic/angular';
+import {AlertController, Events, MenuController} from '@ionic/angular';
 import {TimerService} from '../services/timer/timer.service';
 
 @Component({
@@ -13,13 +13,21 @@ export class HomePage {
 
     timerStarted: boolean = false;
     workoutStarted: boolean = false;
+    buttonColor: string = 'success';
 
     constructor(
         private zone: NgZone,
         private events: Events,
         private timerService: TimerService,
-        private alertController: AlertController
+        private alertController: AlertController,
+        private menuCtrl: MenuController
     ){
+
+
+    }
+
+    ngOnInit(){
+        this.menuCtrl.enable(true);
 
         this.zone.run(() => {
             this.timer = this.timerService.getData();
@@ -35,6 +43,7 @@ export class HomePage {
     startTimer(){
 
         this.timerService.start();
+        this.buttonColor = 'warning';
 
         this.zone.run(() => {
             this.workoutStarted = true;
@@ -50,6 +59,8 @@ export class HomePage {
         this.zone.run(() => {
             this.timerStarted = !this.timerStarted;
         });
+
+        this.buttonColor = !this.timerStarted ? 'success' : 'warning';
 
     }
 

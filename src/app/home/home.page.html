@@ -49,7 +49,7 @@
                         size="large"><ion-icon name="play"></ion-icon></ion-button>
         </div>
         <div>
-            <ion-button *ngIf="workoutStarted" color="success" shape="round" size="large" (click)="pauseTimer()">
+            <ion-button *ngIf="workoutStarted" [color]="buttonColor" shape="round" size="large" (click)="pauseTimer()">
                 <ion-icon *ngIf="timerStarted" name="pause"></ion-icon>
                 <ion-icon *ngIf="!timerStarted" name="play"></ion-icon>
             </ion-button>
