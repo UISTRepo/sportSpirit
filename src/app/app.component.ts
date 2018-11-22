@@ -12,6 +12,7 @@ import {
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import {Router} from '@angular/router';
+import {TimerService} from './services/timer/timer.service';
 
 @Component({
     selector: 'app-root',
@@ -38,7 +39,8 @@ export class AppComponent {
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
         private navCtrl: NavController,
-        private alertController: AlertController
+        private alertController: AlertController,
+        private timer: TimerService
     ) {
         this.initializeApp();
 
@@ -86,6 +88,7 @@ export class AppComponent {
                 }, {
                     text: 'Yes',
                     handler: () => {
+                        this.timer.stop(false);
                         this.navCtrl.navigateRoot('/login');
 
                     }

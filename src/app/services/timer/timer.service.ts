@@ -39,11 +39,13 @@ export class TimerService {
 
     }
 
-    stop(){
+    stop(saveData){
 
         clearInterval(this.timerInterval);
 
-        console.log('save the DATA');
+        if(saveData){
+            console.log('save the DATA');
+        }
 
         this.reset();
 

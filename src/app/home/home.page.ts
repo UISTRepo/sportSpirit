@@ -96,7 +96,7 @@ export class HomePage {
 
     resetTimer(){
 
-        this.timerService.stop();
+        this.timerService.stop(true);
 
         this.zone.run(() => {
             this.timer = {
