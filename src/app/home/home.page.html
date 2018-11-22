@@ -32,11 +32,11 @@
             </ion-row>
             <ion-row no-padding>
                 <ion-col>
-                    0.0 km
+                    {{distance | number:'1.1-1'}} km
                 </ion-col>
                 <ion-col size="1"></ion-col>
                 <ion-col>
-                    2.3 km/h
+                    {{average | number:'1.1-1'}} km/h
                 </ion-col>
             </ion-row>
         </div>
@@ -45,18 +45,18 @@
     <div text-center>
 
         <div>
-            <ion-button *ngIf="!workoutStarted" color="success" shape="round" (click)="startTimer()"
+            <ion-button class="trackerButton" *ngIf="!workoutStarted" color="success" (click)="startTimer()"
                         size="large"><ion-icon name="play"></ion-icon></ion-button>
         </div>
         <div>
-            <ion-button *ngIf="workoutStarted" [color]="buttonColor" shape="round" size="large" (click)="pauseTimer()">
+            <ion-button class="trackerButton" *ngIf="workoutStarted" [color]="buttonColor" size="large" (click)="pauseTimer()">
                 <ion-icon *ngIf="timerStarted" name="pause"></ion-icon>
                 <ion-icon *ngIf="!timerStarted" name="play"></ion-icon>
             </ion-button>
         </div>
         <div>
             <ion-button *ngIf="workoutStarted && !timerStarted" color="danger" (click)="stopTimer()"
-                        shape="round" size="large"><ion-icon name="square"></ion-icon></ion-button>
+                        ><ion-icon name="square"></ion-icon></ion-button>
         </div>
     </div>
 

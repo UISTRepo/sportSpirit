@@ -7,6 +7,8 @@ import {Events} from '@ionic/angular';
 export class TimerService {
 
     private timerInterval;
+    private timerStarted: boolean = false;
+    private workoutStarted: boolean = false;
 
     private timer: any = {
         seconds: 0,
@@ -18,13 +20,20 @@ export class TimerService {
 
     }
 
-    getData(){
-        return this.timer;
+    getVariables(){
+        return {
+            timer: this.timer,
+            timerStarted: this.timerStarted,
+            workoutStarted: this.workoutStarted,
+        }
     }
 
     start(){
 
         this.startCount();
+
+        this.workoutStarted = true;
+        this.timerStarted = true;
 
     }
 
@@ -36,6 +45,8 @@ export class TimerService {
         else{
             this.startCount();
         }
+
+        this.timerStarted = !this.timerStarted;
 
     }
 
@@ -58,6 +69,9 @@ export class TimerService {
             minutes: 0,
             hours: 0
         };
+
+        this.workoutStarted = false;
+        this.timerStarted = false;
 
     }
 

@@ -25,7 +25,7 @@ export class AppRoutingModule {
         this.platform.ready().then(() => {
             this.storage.get('sportSpirit.userLogged').then((data) => {
 
-                if(data){
+                if(data && data.id){
                     this.navCtrl.navigateRoot('/home');
                 }
                 else{

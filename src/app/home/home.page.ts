@@ -10,10 +10,12 @@ import {TimerService} from '../services/timer/timer.service';
 export class HomePage {
 
     timer: any = {};
+    distance: number = 0;
+    average: number = 0;
 
-    timerStarted: boolean = false;
-    workoutStarted: boolean = false;
-    buttonColor: string = 'success';
+    timerStarted: boolean;
+    workoutStarted: boolean;
+    buttonColor: string;
 
     constructor(
         private zone: NgZone,
@@ -30,14 +32,28 @@ export class HomePage {
         this.menuCtrl.enable(true);
 
         this.zone.run(() => {
-            this.timer = this.timerService.getData();
+            let timerVariables = this.timerService.getVariables();
+
+            this.timer = timerVariables.timer;
+            this.timerStarted = timerVariables.timerStarted;
+            this.workoutStarted = timerVariables.workoutStarted;
+
+            this.buttonColor = !this.timerStarted ? 'success' : 'warning';
+
         });
 
         this.events.subscribe('setTimer', (data) => {
             this.zone.run(() => {
                 this.timer = data;
             })
-        })
+        });
+
+        this.events.subscribe('setDistance', (data: any) => {
+            this.zone.run(() => {
+                this.distance = data.distance;
+                this.average = data.average;
+            })
+        });
     }
 
     startTimer(){

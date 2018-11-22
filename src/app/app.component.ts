@@ -13,6 +13,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import {Router} from '@angular/router';
 import {TimerService} from './services/timer/timer.service';
+import {Storage} from '@ionic/storage';
 
 @Component({
     selector: 'app-root',
@@ -40,10 +41,10 @@ export class AppComponent {
         private statusBar: StatusBar,
         private navCtrl: NavController,
         private alertController: AlertController,
-        private timer: TimerService
+        private timer: TimerService,
+        private storage: Storage
     ) {
         this.initializeApp();
-
     }
 
     initializeApp() {
@@ -88,6 +89,7 @@ export class AppComponent {
                 }, {
                     text: 'Yes',
                     handler: () => {
+                        this.storage.set('sportSpirit.userLogged', {});
                         this.timer.stop(false);
                         this.navCtrl.navigateRoot('/login');
 
