@@ -1,6 +1,14 @@
 import {Component, QueryList, ViewChildren} from '@angular/core';
 
-import {ActionSheetController, IonRouterOutlet, MenuController, ModalController, Platform, PopoverController} from '@ionic/angular';
+import {
+    ActionSheetController, AlertController,
+    IonRouterOutlet,
+    MenuController,
+    ModalController,
+    NavController,
+    Platform,
+    PopoverController
+} from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import {Router} from '@angular/router';
@@ -29,11 +37,8 @@ export class AppComponent {
         private platform: Platform,
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
-        private router: Router,
-        public modalCtrl: ModalController,
-        private menu: MenuController,
-        private actionSheetCtrl: ActionSheetController,
-        private popoverCtrl: PopoverController
+        private navCtrl: NavController,
+        private alertController: AlertController
     ) {
         this.initializeApp();
 
@@ -48,7 +53,6 @@ export class AppComponent {
         });
     }
 
-    // active hardware back button
     backButtonEvent() {
         this.platform.backButton.subscribe(async () => {
 
@@ -61,5 +65,34 @@ export class AppComponent {
                 }
             });
         });
+    }
+
+    logOut(){
+        this.presentLogOutConfirm();
+    }
+
+    async presentLogOutConfirm() {
+        const alert = await this.alertController.create({
+            header: 'Log out',
+            message: 'Are you sure that you want to log out?',
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: (blah) => {
+
+                    }
+                }, {
+                    text: 'Yes',
+                    handler: () => {
+                        this.navCtrl.navigateRoot('/login');
+
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
     }
 }
