@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import {Storage} from '@ionic/storage';
 import {MenuController, NavController, Platform} from '@ionic/angular';
+import {TimerService} from '../services/timer/timer.service';
 
 @Component({
     selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginPage implements OnInit {
         private storage: Storage,
         private navCtrl: NavController,
         private platform: Platform,
-        private menuCtrl: MenuController
+        private menuCtrl: MenuController,
+        private timer: TimerService
     ) {
 
     }
@@ -45,6 +47,16 @@ export class LoginPage implements OnInit {
 
                 })
                 .catch(e => console.log('Error logging into Facebook', e));
+        }
+        else{
+            let input = {
+                id: '1234567890',
+                email: '123@123.com'
+            };
+
+            this.storage.set('sportSpirit.userLogged', input);
+
+            this.navCtrl.navigateRoot('/home');
         }
 
     }
