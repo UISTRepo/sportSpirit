@@ -22,7 +22,9 @@ export class TrackingService {
 
         this.platform.ready().then(() => {
 
-            this.storage.get('sportSpirit.trackingData').then((data: any) => {
+            this.getTrackingId();
+
+            /*this.storage.get('sportSpirit.trackingData').then((data: any) => {
 
                 if(data && data.id){
                     this.id = data.id;
@@ -32,7 +34,7 @@ export class TrackingService {
                     this.getTrackingId();
                 }
 
-            });
+            });*/
 
             this.backgroundMode.setDefaults({
                 title: 'SportSpirit',
@@ -93,18 +95,11 @@ export class TrackingService {
             else{
                 this.id = 1;
             }
-            
         })
     }
 
     private prevCoords: any = {};
-    private trackingData: any = {
-        distance: 0,
-        average: 0
-    };
-
-    private numberOfPoints = 0;
-    private totalSpeed = 0;
+    private trackingData: any = {};
 
     private addCoordinates(location){
         if(location.speed != null && location.speed > 0.2){
@@ -117,11 +112,11 @@ export class TrackingService {
 
             if(!isNaN(distance)){
 
-                this.numberOfPoints++;
-                this.totalSpeed += location.speed;
+                this.trackingData.numberOfPoints++;
+                this.trackingData.totalSpeed += location.speed;
 
                 this.trackingData.distance += distance;
-                this.trackingData.average = (this.totalSpeed/this.numberOfPoints*3.6);
+                this.trackingData.average = (this.trackingData.totalSpeed/this.trackingData.numberOfPoints*3.6);
 
                 this.events.publish('setDistance', {
                     distance: this.trackingData.distance,
@@ -131,12 +126,11 @@ export class TrackingService {
                 this.prevCoords = location;
 
                 let input = {
-                    id: this.id,
                     latitude: location.latitude,
                     longitude: location.longitude
                 };
 
-                this.coordinates.push(input);
+                this.trackingData.coordinates.push(input);
 
                 this.storage.set('sportSpirit.trackingData', this.trackingData);
             }
@@ -146,24 +140,28 @@ export class TrackingService {
 
     private coordinates: any = [];
 
-    resetData() {
+    resetData(id = 0) {
 
         this.coordinates = [];
 
         this.trackingData = {
+            id: id,
             average: 0,
-            distance: 0
+            distance: 0,
+            coordinates: [],
+            numberOfPoints: 0,
+            totalSpeed: 0
         };
-
-        this.numberOfPoints = 0;
+        
         this.prevCoords = {};
-        this.totalSpeed = 0;
 
     }
 
     startTracking(){
 
         if(!this.tracking){
+
+            this.resetData(this.id);
 
             this.tracking = true;
 
@@ -177,9 +175,9 @@ export class TrackingService {
 
     }
 
-    pauseTracking(){
+    pauseTracking(state){
         if(this.platform.is('cordova')){
-            this.bgGeo.stop();
+            state ? this.bgGeo.stop() : this.bgGeo.start();
         }
     }
 
@@ -204,16 +202,11 @@ export class TrackingService {
 
     private storeCoordinates(){
 
-        let input = {
-            id: this.id,
-            coordinates: this.coordinates,
-            distance: this.trackingData.distance,
-            average: this.trackingData.average
-        };
+        this.id++;
 
-        this.events.publish('storeDistance', input);
+        this.events.publish('storeDistance', this.trackingData);
 
-        this.resetData();
+        this.resetData(this.id);
     }
 
     rad(x) {

@@ -17,7 +17,7 @@ export class HomePage {
     workoutStarted: boolean;
     buttonColor: string;
 
-    type: number = 0;
+    type: number;
 
     constructor(
         private zone: NgZone,
@@ -36,6 +36,7 @@ export class HomePage {
             this.timer = timerVariables.timer;
             this.timerStarted = timerVariables.timerStarted;
             this.workoutStarted = timerVariables.workoutStarted;
+            this.type = timerVariables.type;
         });
     }
 
@@ -77,7 +78,7 @@ export class HomePage {
             return;
         }
 
-        this.timerService.start();
+        this.timerService.start(this.type);
         this.buttonColor = 'warning';
 
         this.zone.run(() => {

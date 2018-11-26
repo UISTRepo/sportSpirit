@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Events} from '@ionic/angular';
 import {TrackingService} from './tracking/tracking.service';
+import {Storage} from '@ionic/storage';
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +11,7 @@ export class TimerService {
     private timerInterval;
     private timerStarted: boolean = false;
     private workoutStarted: boolean = false;
+    private type: number = 0;
 
     private timer: any = {
         seconds: 0,
@@ -17,11 +19,26 @@ export class TimerService {
         hours: 0
     };
 
-    constructor(private events: Events, private tracking: TrackingService) {
+    constructor(
+        private events: Events,
+        private tracking: TrackingService,
+        private storage: Storage
+    ) {
         this.events.subscribe('storeDistance', (data) => {
             data.timer = this.timer;
+            data.type = this.type;
 
-            console.log(data);
+            this.storage.get('sportSpirit.activities').then((activities: any) => {
+
+                if(activities){
+                    activities.push(data);
+                    this.storage.set('sportSpirit.activities', activities);
+                }
+                else{
+                    this.storage.set('sportSpirit.activities', [data]);
+                }
+
+            });
         })
     }
 
@@ -30,10 +47,13 @@ export class TimerService {
             timer: this.timer,
             timerStarted: this.timerStarted,
             workoutStarted: this.workoutStarted,
+            type: this.type
         }
     }
 
-    start(){
+    start(type){
+
+        this.type = type;
 
         this.startCount();
 
@@ -45,6 +65,8 @@ export class TimerService {
     }
 
     pause(timerStarted){
+
+        this.tracking.pauseTracking(timerStarted);
 
         if(timerStarted){
             clearInterval(this.timerInterval);
@@ -79,6 +101,7 @@ export class TimerService {
 
         this.workoutStarted = false;
         this.timerStarted = false;
+        this.type = 0;
 
     }
 
