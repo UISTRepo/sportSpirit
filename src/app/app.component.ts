@@ -1,17 +1,13 @@
 import {Component, QueryList, ViewChildren} from '@angular/core';
 
 import {
-    ActionSheetController, AlertController,
+    AlertController,
     IonRouterOutlet,
-    MenuController,
-    ModalController,
     NavController,
     Platform,
-    PopoverController
 } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import {Router} from '@angular/router';
 import {TimerService} from './services/timer/timer.service';
 import {Storage} from '@ionic/storage';
 
@@ -64,7 +60,8 @@ export class AppComponent {
                     outlet.pop();
 
                 } else {
-                    navigator['app'].exitApp();
+                    if(!this.timer.getVariables().workoutStarted)
+                        navigator['app'].exitApp();
                 }
             });
         });

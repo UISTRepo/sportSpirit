@@ -17,6 +17,8 @@ export class HomePage {
     workoutStarted: boolean;
     buttonColor: string;
 
+    type: number = 0;
+
     constructor(
         private zone: NgZone,
         private events: Events,
@@ -25,18 +27,24 @@ export class HomePage {
         private menuCtrl: MenuController
     ){
 
-
     }
 
-    ngOnInit(){
-        this.menuCtrl.enable(true);
-
+    private getTimerVariables(){
         this.zone.run(() => {
             let timerVariables = this.timerService.getVariables();
 
             this.timer = timerVariables.timer;
             this.timerStarted = timerVariables.timerStarted;
             this.workoutStarted = timerVariables.workoutStarted;
+        });
+    }
+
+    ngOnInit(){
+        this.menuCtrl.enable(true);
+
+        this.zone.run(() => {
+
+            this.getTimerVariables();
 
             this.buttonColor = !this.timerStarted ? 'success' : 'warning';
 
@@ -56,7 +64,18 @@ export class HomePage {
         });
     }
 
-    startTimer(){
+    startTimer(type = null){
+
+        if(type){
+            this.zone.run(() => {
+                this.type = type;
+            });
+        }
+
+        if(!this.type){
+            this.presentSelectActivityConfirm();
+            return;
+        }
 
         this.timerService.start();
         this.buttonColor = 'warning';
@@ -74,9 +93,8 @@ export class HomePage {
 
         this.zone.run(() => {
             this.timerStarted = !this.timerStarted;
+            this.buttonColor = !this.timerStarted ? 'success' : 'warning';
         });
-
-        this.buttonColor = !this.timerStarted ? 'success' : 'warning';
 
     }
 
@@ -114,17 +132,38 @@ export class HomePage {
 
         this.timerService.stop(true);
 
-        this.zone.run(() => {
-            this.timer = {
-                seconds: 0,
-                minutes: 0,
-                hours: 0
-            };
+        this.type = 0;
 
-            this.workoutStarted = false;
-            this.timerStarted = false;
+        this.getTimerVariables();
+
+    }
+
+    async presentSelectActivityConfirm() {
+        const alert = await this.alertController.create({
+            header: 'Select activity',
+            cssClass: 'activitySelect',
+            buttons: [
+                {
+                    text: 'Running',
+                    handler: () => {
+                        this.startTimer(1);
+                    }
+                },
+                {
+                    text: 'Cycling',
+                    handler: () => {
+                        this.startTimer(2);
+                    }
+                }
+            ]
         });
 
+        await alert.present();
+    }
+
+    selectType(type){
+        if(!this.workoutStarted)
+            this.type = Number(type);
     }
 
 }

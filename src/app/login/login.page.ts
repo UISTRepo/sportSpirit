@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import {Storage} from '@ionic/storage';
 import {MenuController, NavController, Platform} from '@ionic/angular';
-import {TimerService} from '../services/timer/timer.service';
 
 @Component({
     selector: 'app-login',
@@ -16,8 +15,7 @@ export class LoginPage implements OnInit {
         private storage: Storage,
         private navCtrl: NavController,
         private platform: Platform,
-        private menuCtrl: MenuController,
-        private timer: TimerService
+        private menuCtrl: MenuController
     ) {
 
     }

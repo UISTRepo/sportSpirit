@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { IonicStorageModule } from '@ionic/storage';
 import {Facebook} from '@ionic-native/facebook/ngx';
+import {BackgroundMode} from '@ionic-native/background-mode/ngx';
 
 @NgModule({
     declarations: [AppComponent],
@@ -25,7 +26,8 @@ import {Facebook} from '@ionic-native/facebook/ngx';
         StatusBar,
         SplashScreen,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-        Facebook
+        Facebook,
+        BackgroundMode
     ],
     bootstrap: [AppComponent]
 })

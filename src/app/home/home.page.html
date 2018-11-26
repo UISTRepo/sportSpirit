@@ -11,11 +11,28 @@
 
 <ion-content padding-horizontal>
 
+    <div>
+        <div *ngIf="!workoutStarted" text-center class="mainSelection">
+            Select sport activity
+        </div>
+        <div *ngIf="workoutStarted" text-center class="mainSelection">
+            <span *ngIf="type == 1">Running</span>
+            <span *ngIf="type == 2">Cycling</span>
+        </div>
+
+        <ion-row>
+            <ion-col class="imageItem" (click)="selectType(1)" [ngClass]="{'selectedImage': type == 1}">
+                <img src="assets/img/running.png">
+            </ion-col>
+            <ion-col class="imageItem" (click)="selectType(2)" [ngClass]="{'selectedImage': type == 2}">
+                <img src="assets/img/cycling.png">
+            </ion-col>
+        </ion-row>
+
+    </div>
+
     <div text-center class="timerHolder">
         <div class="theTimer customItem">
-            <div>
-                Current session
-            </div>
             <div class="timerNumbers">
                 {{timer.hours | number:'1.0-0'}}:{{timer.minutes | number:'2.0-0'}}:{{timer.seconds | number:'2.0-0'}}
             </div>
@@ -44,20 +61,23 @@
 
     <div text-center>
 
-        <div>
-            <ion-button class="trackerButton" *ngIf="!workoutStarted" color="success" (click)="startTimer()"
+        <div *ngIf="!workoutStarted">
+            <ion-button class="trackerButton"  color="success" (click)="startTimer()"
                         size="large"><ion-icon name="play"></ion-icon></ion-button>
         </div>
-        <div>
-            <ion-button class="trackerButton" *ngIf="workoutStarted" [color]="buttonColor" size="large" (click)="pauseTimer()">
-                <ion-icon *ngIf="timerStarted" name="pause"></ion-icon>
-                <ion-icon *ngIf="!timerStarted" name="play"></ion-icon>
-            </ion-button>
+        <div style="position: relative">
+            <div *ngIf="workoutStarted">
+                <ion-button class="trackerButton"  [color]="buttonColor" size="large" (click)="pauseTimer()">
+                    <ion-icon *ngIf="timerStarted" name="pause"></ion-icon>
+                    <ion-icon *ngIf="!timerStarted" name="play"></ion-icon>
+                </ion-button>
+            </div>
+            <div *ngIf="workoutStarted && !timerStarted" class="stopButton">
+                <ion-button  color="danger" (click)="stopTimer()"
+                ><ion-icon name="square"></ion-icon></ion-button>
+            </div>
         </div>
-        <div>
-            <ion-button *ngIf="workoutStarted && !timerStarted" color="danger" (click)="stopTimer()"
-                        ><ion-icon name="square"></ion-icon></ion-button>
-        </div>
+
     </div>
 
 </ion-content>

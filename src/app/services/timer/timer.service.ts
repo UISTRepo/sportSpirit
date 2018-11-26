@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Events} from '@ionic/angular';
+import {TrackingService} from './tracking/tracking.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,12 @@ export class TimerService {
         hours: 0
     };
 
-    constructor(private events: Events) {
+    constructor(private events: Events, private tracking: TrackingService) {
+        this.events.subscribe('storeDistance', (data) => {
+            data.timer = this.timer;
 
+            console.log(data);
+        })
     }
 
     getVariables(){
@@ -31,6 +36,8 @@ export class TimerService {
     start(){
 
         this.startCount();
+
+        this.tracking.startTracking();
 
         this.workoutStarted = true;
         this.timerStarted = true;
@@ -55,7 +62,7 @@ export class TimerService {
         clearInterval(this.timerInterval);
 
         if(saveData){
-            console.log('save the DATA');
+            this.tracking.stopTracking(true);
         }
 
         this.reset();
