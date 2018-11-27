@@ -75,8 +75,11 @@ export class TrackingService {
                     });
                 });
 
-                this.bgGeo.on('start', function(location) {
+                this.bgGeo.on('start', (location) => {
                     console.log('[INFO] START');
+
+                    console.log(this.backgroundMode.isEnabled());
+
                 });
 
                 this.bgGeo.on('stop', function(location) {
@@ -89,6 +92,7 @@ export class TrackingService {
 
     private getTrackingId(){
         this.storage.get('sportSpirit.activities').then((data: any) => {
+            console.log(data);
             if(data && data.length){
                 this.id = Number(data[data.length -1].id) + 1;
             }
@@ -110,30 +114,28 @@ export class TrackingService {
 
             let distance = this.calculateDistance(this.prevCoords, location);
 
-            if(!isNaN(distance)){
 
-                this.trackingData.numberOfPoints++;
-                this.trackingData.totalSpeed += location.speed;
+            this.trackingData.numberOfPoints++;
+            this.trackingData.totalSpeed += location.speed;
 
+            if(!isNaN(distance))
                 this.trackingData.distance += distance;
-                this.trackingData.average = (this.trackingData.totalSpeed/this.trackingData.numberOfPoints*3.6);
 
-                this.events.publish('setDistance', {
-                    distance: this.trackingData.distance,
-                    average: this.trackingData.average
-                });
+            this.trackingData.average = (this.trackingData.totalSpeed/this.trackingData.numberOfPoints*3.6);
 
-                this.prevCoords = location;
+            this.events.publish('setDistance', {
+                distance: this.trackingData.distance,
+                average: this.trackingData.average
+            });
 
-                let input = {
-                    latitude: location.latitude,
-                    longitude: location.longitude
-                };
+            this.prevCoords = location;
 
-                this.trackingData.coordinates.push(input);
+            let input = {
+                latitude: location.latitude,
+                longitude: location.longitude
+            };
 
-                this.storage.set('sportSpirit.trackingData', this.trackingData);
-            }
+            this.trackingData.coordinates.push(input);
 
         }
     }
@@ -152,7 +154,7 @@ export class TrackingService {
             numberOfPoints: 0,
             totalSpeed: 0
         };
-        
+
         this.prevCoords = {};
 
     }

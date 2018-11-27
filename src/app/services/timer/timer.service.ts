@@ -13,6 +13,8 @@ export class TimerService {
     private workoutStarted: boolean = false;
     private type: number = 0;
 
+    private startTime: any = null;
+
     private timer: any = {
         seconds: 0,
         minutes: 0,
@@ -51,6 +53,24 @@ export class TimerService {
         }
     }
 
+    recalculateTimer(){
+
+        let miliseconds: number = new Date().getTime() - this.startTime.getTime();
+
+        let seconds = miliseconds / 1000;
+
+        let minutes = seconds / 60;
+        seconds = seconds % 60;
+
+        let hours = minutes / 60;
+        minutes = minutes % 60;
+
+        this.timer.seconds = Math.floor(seconds);
+        this.timer.minutes = Math.floor(minutes);
+        this.timer.hours = Math.floor(hours);
+
+    }
+
     start(type){
 
         this.type = type;
@@ -58,6 +78,8 @@ export class TimerService {
         this.startCount();
 
         this.tracking.startTracking();
+
+        this.startTime = new Date();
 
         this.workoutStarted = true;
         this.timerStarted = true;
@@ -92,6 +114,8 @@ export class TimerService {
     }
 
     reset(){
+
+        this.startTime = null;
 
         this.timer = {
             seconds: 0,

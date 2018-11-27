@@ -49,6 +49,13 @@ export class AppComponent {
             this.splashScreen.hide();
 
             this.backButtonEvent();
+
+            this.platform.resume.subscribe(() => {
+
+                if(this.timer.getVariables().workoutStarted)
+                    this.timer.recalculateTimer();
+
+            });
         });
     }
 

@@ -133,6 +133,9 @@ export class HomePage {
 
         this.timerService.stop(true);
 
+        this.distance = 0;
+        this.average = 0;
+
         this.type = 0;
 
         this.getTimerVariables();
