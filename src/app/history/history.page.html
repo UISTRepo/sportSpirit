@@ -19,9 +19,9 @@
                 <h3>{{item.totalTime}}</h3>
                 <p>{{item.distance | number:'1.1-1'}}km</p>
             </ion-label>
-            <div side="end">
-                {{item.date | date: 'EEE d MMM'}}
-            </div>
+            <p side="end" text-right class="theTime">
+                {{item.date | relativeTime}}
+            </p>
         </ion-item>
     </ion-list>
 

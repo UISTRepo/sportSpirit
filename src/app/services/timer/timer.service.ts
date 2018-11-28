@@ -30,13 +30,13 @@ export class TimerService {
 
             let activity: any = {
                 id: data.id,
-                title: 'Morning ' + this.type == 1 ? 'Run' : 'Ride',
+                title: 'The Title',
                 distance: data.distance,
                 average: data.average,
                 coordinates: data.coordinates,
                 timer: this.timer,
                 type: this.type,
-                date: this.convertDate(new Date())
+                date: new Date()
             };
 
             this.storage.get('sportSpirit.activities').then((activities: any) => {
@@ -160,6 +160,6 @@ export class TimerService {
 
             this.events.publish('setTimer', this.timer);
 
-        }, 1);
+        }, 1000);
     }
 }
