@@ -144,7 +144,7 @@ export class HomePage {
 
     async presentSelectActivityConfirm() {
         const alert = await this.alertController.create({
-            header: 'Select activity',
+            header: 'Select the activity',
             cssClass: 'activitySelect',
             buttons: [
                 {
