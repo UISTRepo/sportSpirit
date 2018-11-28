@@ -77,9 +77,6 @@ export class TrackingService {
 
                 this.bgGeo.on('start', (location) => {
                     console.log('[INFO] START');
-
-                    console.log(this.backgroundMode.isEnabled());
-
                 });
 
                 this.bgGeo.on('stop', function(location) {
@@ -92,7 +89,6 @@ export class TrackingService {
 
     private getTrackingId(){
         this.storage.get('sportSpirit.activities').then((data: any) => {
-            console.log(data);
             if(data && data.length){
                 this.id = Number(data[data.length -1].id) + 1;
             }
@@ -113,7 +109,6 @@ export class TrackingService {
             }
 
             let distance = this.calculateDistance(this.prevCoords, location);
-
 
             this.trackingData.numberOfPoints++;
             this.trackingData.totalSpeed += location.speed;
@@ -216,14 +211,14 @@ export class TrackingService {
     };
 
     calculateDistance(p1, p2) {
-        var R = 6378137; // Earth’s mean radius in meter
-        var dLat = this.rad(p2.latitude - p1.latitude);
-        var dLong = this.rad(p2.longitude - p1.longitude);
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        let R = 6378137; // Earth’s mean radius in meter
+        let dLat = this.rad(p2.latitude - p1.latitude);
+        let dLong = this.rad(p2.longitude - p1.longitude);
+        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
             Math.cos(this.rad(p1.latitude)) * Math.cos(this.rad(p2.latitude)) *
             Math.sin(dLong / 2) * Math.sin(dLong / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-        return (d/1000); // returns the distance in miles
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        let d = R * c;
+        return (d/1000);
     }
 }

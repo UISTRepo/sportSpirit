@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Events} from '@ionic/angular';
-import {TrackingService} from './tracking/tracking.service';
 import {Storage} from '@ionic/storage';
+import {TrackingService} from '../tracking/tracking.service';
 
 @Injectable({
     providedIn: 'root'
@@ -27,21 +27,36 @@ export class TimerService {
         private storage: Storage
     ) {
         this.events.subscribe('storeDistance', (data) => {
-            data.timer = this.timer;
-            data.type = this.type;
+
+            let activity: any = {
+                id: data.id,
+                title: 'Morning ' + this.type == 1 ? 'Run' : 'Ride',
+                distance: data.distance,
+                average: data.average,
+                coordinates: data.coordinates,
+                timer: this.timer,
+                type: this.type,
+                date: this.convertDate(new Date())
+            };
 
             this.storage.get('sportSpirit.activities').then((activities: any) => {
 
                 if(activities){
-                    activities.push(data);
+                    activities.push(activity);
                     this.storage.set('sportSpirit.activities', activities);
                 }
                 else{
-                    this.storage.set('sportSpirit.activities', [data]);
+                    this.storage.set('sportSpirit.activities', [activity]);
                 }
 
             });
         })
+    }
+
+    convertDate(inputFormat) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        let d = new Date(inputFormat);
+        return [pad(d.getFullYear()), pad(d.getMonth()+1), pad(d.getDate())].join('-');
     }
 
     getVariables(){
@@ -145,6 +160,6 @@ export class TimerService {
 
             this.events.publish('setTimer', this.timer);
 
-        }, 1000);
+        }, 1);
     }
 }
