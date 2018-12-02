@@ -16,13 +16,17 @@
   .sc-ion-alert-ios{
     font-weight: normal;
   }
+
+  .alert-button{
+    margin: 0 auto !important;
+  }
+
+  .alert-head{
+    text-align: center !important;
+  }
+
 }
 
 .alert-button{
-  margin: 0 auto !important;
   color: #2EAC46 !important;
-}
-
-.alert-head{
-  text-align: center !important;
 }

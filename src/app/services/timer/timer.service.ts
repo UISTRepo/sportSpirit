@@ -21,6 +21,8 @@ export class TimerService {
         hours: 0
     };
 
+    private totalPaused: number = 0;
+
     constructor(
         private events: Events,
         private tracking: TrackingService,
@@ -68,47 +70,35 @@ export class TimerService {
         }
     }
 
-    recalculateTimer(){
-
-        let miliseconds: number = new Date().getTime() - this.startTime.getTime();
-
-        let seconds = miliseconds / 1000;
-
-        let minutes = seconds / 60;
-        seconds = seconds % 60;
-
-        let hours = minutes / 60;
-        minutes = minutes % 60;
-
-        this.timer.seconds = Math.floor(seconds);
-        this.timer.minutes = Math.floor(minutes);
-        this.timer.hours = Math.floor(hours);
-
-    }
-
     start(type){
 
         this.type = type;
 
         this.startCount();
 
-        this.tracking.startTracking();
-
         this.startTime = new Date();
+
+        this.tracking.startTracking();
 
         this.workoutStarted = true;
         this.timerStarted = true;
 
     }
 
+    private pauseTime: any;
+
     pause(timerStarted){
 
         this.tracking.pauseTracking(timerStarted);
 
         if(timerStarted){
+            this.pauseTime = new Date();
             clearInterval(this.timerInterval);
         }
         else{
+            let miliseconds: number = new Date().getTime() - this.pauseTime.getTime();
+            this.totalPaused += miliseconds/1000;
+
             this.startCount();
         }
 
@@ -138,6 +128,8 @@ export class TimerService {
             hours: 0
         };
 
+        this.totalPaused = 0;
+
         this.workoutStarted = false;
         this.timerStarted = false;
         this.type = 0;
@@ -145,6 +137,7 @@ export class TimerService {
     }
 
     private startCount(){
+
         this.timerInterval = setInterval(() => {
             this.timer.seconds++;
 
@@ -161,5 +154,23 @@ export class TimerService {
             this.events.publish('setTimer', this.timer);
 
         }, 1000);
+    }
+
+    recalculateTimer(){
+
+        let miliseconds: number = new Date().getTime() - this.startTime.getTime();
+
+        let seconds = miliseconds/1000 - this.totalPaused;
+
+        let minutes = seconds / 60;
+        seconds = seconds % 60;
+
+        let hours = minutes / 60;
+        minutes = minutes % 60;
+
+        this.timer.seconds = Math.floor(seconds);
+        this.timer.minutes = Math.floor(minutes);
+        this.timer.hours = Math.floor(hours);
+
     }
 }

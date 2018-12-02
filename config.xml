@@ -99,5 +99,7 @@
         <variable name="ACCOUNT_TYPE" value="$PACKAGE_NAME.account" />
         <variable name="CONTENT_AUTHORITY" value="$PACKAGE_NAME" />
     </plugin>
+    <plugin name="cordova.plugins.diagnostic" spec="4.0.10" />
+    <plugin name="cordova-open-native-settings" spec="1.5.1" />
     <engine name="android" spec="7.1.2" />
 </widget>

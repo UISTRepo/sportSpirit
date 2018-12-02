@@ -32,10 +32,10 @@ export class HistoryPage implements OnInit {
                     value.totalTime += value.timer.seconds + 's ';
                 }
 
-                value.img = value.type == 1 ? 'assets/img/running.png' : 'assets/img/cycling.png'
-            });
+                value.img = value.type == 1 ? 'assets/img/running.png' : 'assets/img/cycling.png';
 
-            this.activities = data;
+                this.activities.unshift(value);
+            });
 
         })
     }

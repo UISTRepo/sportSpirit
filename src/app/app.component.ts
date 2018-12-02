@@ -52,7 +52,7 @@ export class AppComponent {
 
             this.platform.resume.subscribe(() => {
 
-                if(this.timer.getVariables().workoutStarted)
+                if(this.timer.getVariables().timerStarted)
                     this.timer.recalculateTimer();
 
             });

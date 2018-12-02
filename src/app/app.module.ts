@@ -12,6 +12,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { IonicStorageModule } from '@ionic/storage';
 import {Facebook} from '@ionic-native/facebook/ngx';
 import {BackgroundMode} from '@ionic-native/background-mode/ngx';
+import {Diagnostic} from '@ionic-native/diagnostic/ngx';
+import {OpenNativeSettings} from '@ionic-native/open-native-settings/ngx';
 
 @NgModule({
     declarations: [AppComponent],
@@ -27,7 +29,9 @@ import {BackgroundMode} from '@ionic-native/background-mode/ngx';
         SplashScreen,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         Facebook,
-        BackgroundMode
+        BackgroundMode,
+        Diagnostic,
+        OpenNativeSettings
     ],
     bootstrap: [AppComponent]
 })

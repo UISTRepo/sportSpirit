@@ -1,6 +1,8 @@
 import {Component, NgZone} from '@angular/core';
-import {AlertController, Events, MenuController} from '@ionic/angular';
+import {AlertController, Events, MenuController, Platform} from '@ionic/angular';
 import {TimerService} from '../services/timer/timer.service';
+import {Diagnostic} from '@ionic-native/diagnostic/ngx';
+import {OpenNativeSettings} from '@ionic-native/open-native-settings/ngx';
 
 @Component({
     selector: 'app-home',
@@ -24,7 +26,10 @@ export class HomePage {
         private events: Events,
         private timerService: TimerService,
         private alertController: AlertController,
-        private menuCtrl: MenuController
+        private menuCtrl: MenuController,
+        private platform: Platform,
+        private diagnostic: Diagnostic,
+        private nativeSettings: OpenNativeSettings
     ){
 
     }
@@ -67,6 +72,41 @@ export class HomePage {
 
     startTimer(type = null){
 
+        if(this.platform.is('cordova') && this.platform.is('android')){
+            this.diagnostic.isGpsLocationEnabled().then((data) => {
+                if(!data){
+                    this.presentGPSAlert();
+                }
+                else{
+                    this.continueWithStart(type);
+                }
+            })
+        }
+        else{
+            this.continueWithStart(type);
+        }
+
+    }
+
+    async presentGPSAlert() {
+        const alert = await this.alertController.create({
+            header: 'GPS is disabled',
+            message: 'You must enable the GPS sensor, so your distance and speed will be recorded.',
+            buttons: [
+                {
+                    text: 'OK',
+                    handler: () => {
+                        this.nativeSettings.open('location');
+
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
+    }
+
+    continueWithStart(type){
         if(type){
             this.zone.run(() => {
                 this.type = type;
@@ -85,7 +125,6 @@ export class HomePage {
             this.workoutStarted = true;
             this.timerStarted = true;
         });
-
     }
 
     pauseTimer(){
