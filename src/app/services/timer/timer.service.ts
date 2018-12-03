@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Events} from '@ionic/angular';
+import {AlertController, Events} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
 import {TrackingService} from '../tracking/tracking.service';
 
@@ -26,33 +26,100 @@ export class TimerService {
     constructor(
         private events: Events,
         private tracking: TrackingService,
-        private storage: Storage
+        private storage: Storage,
+        private alertController: AlertController
     ) {
         this.events.subscribe('storeDistance', (data) => {
 
-            let activity: any = {
-                id: data.id,
-                title: 'The Title',
-                distance: data.distance,
-                average: data.average,
-                coordinates: data.coordinates,
-                timer: this.timer,
-                type: this.type,
-                date: new Date()
-            };
+            data.title = this.createTitle(this.type);
+            data.timer = this.timer;
+            data.type = this.type;
+            data.date = new Date();
 
-            this.storage.get('sportSpirit.activities').then((activities: any) => {
+            this.presentTitleAlert(data);
 
-                if(activities){
-                    activities.push(activity);
-                    this.storage.set('sportSpirit.activities', activities);
+        });
+
+    }
+
+    private saveActivity(data){
+
+        this.storage.get('sportSpirit.activities').then((activities: any) => {
+
+            if(activities){
+                activities.push(data);
+                this.storage.set('sportSpirit.activities', activities);
+            }
+            else{
+                this.storage.set('sportSpirit.activities', [data]);
+            }
+
+        });
+    }
+
+    private createTitle(type){
+        let title = '';
+
+        let today = new Date();
+
+        let hours = today.getHours();
+
+        if(hours >= 5 && hours < 11){
+            title += 'Morning ';
+        }
+        else if(hours >= 11 && hours < 18){
+            title += 'Afternoon ';
+        }
+        else if(hours >= 18 && hours < 22){
+            title += 'Evening ';
+        }
+        else{
+            title += 'Night ';
+        }
+
+        switch(type){
+            case 1:
+                title += 'Run';
+                break;
+            case 2:
+                title += 'Ride';
+                break;
+        }
+
+        return title;
+    }
+
+    async presentTitleAlert(activity: any) {
+        const alert = await this.alertController.create({
+            header: 'Enter Title',
+            backdropDismiss: false,
+            inputs: [
+                {
+                    name: 'title',
+                    type: 'text',
+                    placeholder: 'Enter title',
+                    value: activity.title
                 }
-                else{
-                    this.storage.set('sportSpirit.activities', [activity]);
-                }
+            ],
+            buttons: [
+                {
+                    text: 'Save',
+                    handler: (data) => {
 
-            });
-        })
+                        if(data.title){
+                            activity.title = data.title;
+                            this.saveActivity(activity);
+                        }
+                        else{
+                            this.presentTitleAlert(activity);
+                        }
+
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
     }
 
     convertDate(inputFormat) {
@@ -97,7 +164,7 @@ export class TimerService {
         }
         else{
             let miliseconds: number = new Date().getTime() - this.pauseTime.getTime();
-            this.totalPaused += miliseconds/1000;
+            this.totalPaused += miliseconds;
 
             this.startCount();
         }
@@ -160,7 +227,7 @@ export class TimerService {
 
         let miliseconds: number = new Date().getTime() - this.startTime.getTime();
 
-        let seconds = miliseconds/1000 - this.totalPaused;
+        let seconds = (miliseconds - this.totalPaused)/1000;
 
         let minutes = seconds / 60;
         seconds = seconds % 60;
@@ -173,4 +240,5 @@ export class TimerService {
         this.timer.hours = Math.floor(hours);
 
     }
+
 }

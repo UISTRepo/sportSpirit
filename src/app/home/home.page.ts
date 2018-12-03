@@ -31,6 +31,8 @@ export class HomePage {
         private diagnostic: Diagnostic,
         private nativeSettings: OpenNativeSettings
     ){
+        
+
 
     }
 

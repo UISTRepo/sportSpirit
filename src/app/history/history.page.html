@@ -9,13 +9,19 @@
 
 <ion-content>
 
+    <ion-card *ngIf="activities.length == 0">
+        <ion-card-content text-center>
+            No history
+        </ion-card-content>
+    </ion-card>
+
     <ion-list>
         <ion-item *ngFor="let item of activities">
             <ion-avatar slot="start">
                 <img [src]="item.img">
             </ion-avatar>
             <ion-label>
-                <h2>The Title</h2>
+                <h2 text-wrap>{{item.title}}</h2>
                 <h3>{{item.totalTime}}</h3>
                 <p>{{item.distance | number:'1.1-1'}}km</p>
             </ion-label>
