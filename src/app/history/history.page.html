@@ -16,7 +16,7 @@
     </ion-card>
 
     <ion-list>
-        <ion-item *ngFor="let item of activities">
+        <ion-item style="position: relative" *ngFor="let item of activities" [href]="'/activity/' + item.id">
             <ion-avatar slot="start">
                 <img [src]="item.img">
             </ion-avatar>
@@ -25,7 +25,7 @@
                 <h3>{{item.totalTime}}</h3>
                 <p>{{item.distance | number:'1.1-1'}}km</p>
             </ion-label>
-            <p side="end" text-right class="theTime">
+            <p class="theTime">
                 {{item.date | relativeTime}}
             </p>
         </ion-item>

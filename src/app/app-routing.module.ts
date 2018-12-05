@@ -13,7 +13,8 @@ const routes: Routes = [
         loadChildren: './list/list.module#ListPageModule'
     },
     { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
-  { path: 'history', loadChildren: './history/history.module#HistoryPageModule' }
+  { path: 'history', loadChildren: './history/history.module#HistoryPageModule' },
+  { path: 'activity/:id', loadChildren: './activity/activity.module#ActivityPageModule' }
 ];
 
 @NgModule({

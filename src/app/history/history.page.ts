@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Storage} from '@ionic/storage';
+import {NavController} from '@ionic/angular';
 
 @Component({
     selector: 'app-history',
@@ -11,14 +12,14 @@ export class HistoryPage implements OnInit {
     activities: any = [];
 
     constructor(
-        private storage: Storage
+        private storage: Storage,
+        private navCtrl: NavController
     ) {
 
     }
 
     ngOnInit() {
         this.storage.get('sportSpirit.activities').then(data => {
-
             if(data){
                 data.forEach((value: any) => {
                     value.totalTime = '';
@@ -40,6 +41,12 @@ export class HistoryPage implements OnInit {
             }
 
         })
+    }
+
+    delete(item){
+        this.activities = this.activities.filter((el) => {
+            return item.id !== el.id;
+        });
     }
 
 }

@@ -1,0 +1,40 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-back-button fill='clear' slot="start" defaultHref='history'>
+        </ion-back-button>
+        <ion-title>{{activity?.title}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <div text-center class="timerHolder">
+
+        <div text-center>
+            <ion-row no-padding>
+                <ion-col class="extraInfo customItem">
+                    <div>Distance</div>
+                    {{activity?.distance | number:'1.1-1'}} km
+                </ion-col>
+                <ion-col class="extraInfo customItem">
+                    <div>Average</div>
+                    {{activity?.average | number:'1.1-1'}} km/h
+                </ion-col>
+            </ion-row>
+        </div>
+
+        <div class="theTimer customItem">
+            <div class="timerNumbers">
+                {{activity?.timer.hours | number:'1.0-0'}}:{{activity?.timer.minutes | number:'2.0-0'}}:{{activity?.timer.seconds | number:'2.0-0'}}
+            </div>
+        </div>
+    </div>
+
+    <div id='map'>
+    </div>
+
+    <div class="theDate" text-center>
+        {{activity?.date | date: 'mediumDate'}}
+    </div>
+
+</ion-content>

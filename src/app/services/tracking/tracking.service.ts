@@ -125,12 +125,7 @@ export class TrackingService {
 
             this.prevCoords = location;
 
-            let input = {
-                latitude: location.latitude,
-                longitude: location.longitude
-            };
-
-            this.trackingData.coordinates.push(input);
+            this.trackingData.coordinates.push([location.longitude, location.latitude]);
 
         }
     }
