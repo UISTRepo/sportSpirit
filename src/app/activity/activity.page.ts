@@ -89,14 +89,17 @@ export class ActivityPage implements OnInit {
             el1.style.left = '2px';
             startMarker.getElement().appendChild(el1);
 
-            let el2: any = document.createElement('img');
+            let endMarker = new mapboxgl.Marker({color: this.activityColor})
+              .setLngLat(cords[cords.length-1])
+              .addTo(this.map);
+            var el2 = document.createElement('img');
             el2.className = 'marker';
             el2.src = 'assets/img/flag.png';
-            el2.style.position = 'absolute';
             el2.style.width = '24px';
-            let endMarker = new mapboxgl.Marker(el2)
-                .setLngLat(cords[cords.length-1])
-                .addTo(this.map);
+            el2.style.position = 'absolute';
+            el2.style.left = '2px';
+            el2.style.padding = '2px';
+            endMarker.getElement().appendChild(el2);
 
             this.map.addLayer({
                 id: 'path',
