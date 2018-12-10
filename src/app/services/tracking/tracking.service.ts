@@ -88,6 +88,8 @@ export class TrackingService {
     }
 
     private getTrackingId(){
+      this.id=0;
+      /*
         this.storage.get('sportSpirit.activities').then((data: any) => {
             if(data && data.length){
                 this.id = Number(data[data.length -1].id) + 1;
@@ -96,6 +98,7 @@ export class TrackingService {
                 this.id = 1;
             }
         })
+        */
     }
 
     private prevCoords: any = {};
@@ -125,7 +128,7 @@ export class TrackingService {
 
             this.prevCoords = location;
 
-            this.trackingData.coordinates.push([location.longitude, location.latitude]);
+            this.trackingData.coordinates.push({lng: location.longitude, lat: location.latitude});
 
         }
     }

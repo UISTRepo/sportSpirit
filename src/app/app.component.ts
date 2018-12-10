@@ -11,6 +11,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import {TimerService} from './services/timer/timer.service';
 import {Storage} from '@ionic/storage';
 
+import { AngularFireAuth } from '@angular/fire/auth';
+
 @Component({
     selector: 'app-root',
     templateUrl: 'app.component.html'
@@ -38,7 +40,8 @@ export class AppComponent {
         private navCtrl: NavController,
         private alertController: AlertController,
         private timer: TimerService,
-        private storage: Storage
+        private storage: Storage,
+        private afAuth: AngularFireAuth
     ) {
         this.initializeApp();
     }
@@ -93,7 +96,10 @@ export class AppComponent {
                 }, {
                     text: 'Yes',
                     handler: () => {
-                        this.storage.set('sportSpirit.userLogged', {});
+
+                        this.afAuth.auth.signOut();
+
+                        this.storage.set('sportSpirit.userId', '');
                         this.timer.stop(false);
                         this.navCtrl.navigateRoot('/login');
 

@@ -15,6 +15,21 @@ import {BackgroundMode} from '@ionic-native/background-mode/ngx';
 import {Diagnostic} from '@ionic-native/diagnostic/ngx';
 import {OpenNativeSettings} from '@ionic-native/open-native-settings/ngx';
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
+
+
+const config = {
+  apiKey: "AIzaSyBFpX0x4JdIhr7hLmiVUe8OjdOnsZs8LIo",
+  authDomain: "sportspirit-ad61a.firebaseapp.com",
+  databaseURL: "https://sportspirit-ad61a.firebaseio.com",
+  projectId: "sportspirit-ad61a",
+  storageBucket: "sportspirit-ad61a.appspot.com",
+  messagingSenderId: "308921384710"
+};
+
 @NgModule({
     declarations: [AppComponent],
     entryComponents: [],
@@ -22,7 +37,10 @@ import {OpenNativeSettings} from '@ionic-native/open-native-settings/ngx';
         BrowserModule,
         IonicModule.forRoot(),
         AppRoutingModule,
-        IonicStorageModule.forRoot()
+        IonicStorageModule.forRoot(),
+        AngularFireModule.initializeApp(config),
+        AngularFirestoreModule.enablePersistence(),
+        AngularFireAuthModule
     ],
     providers: [
         StatusBar,

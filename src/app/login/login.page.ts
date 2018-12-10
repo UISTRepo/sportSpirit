@@ -3,6 +3,9 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import {Storage} from '@ionic/storage';
 import {MenuController, NavController, Platform} from '@ionic/angular';
 
+import { AngularFireAuth } from '@angular/fire/auth';
+import * as firebase from 'firebase/app';
+
 @Component({
     selector: 'app-login',
     templateUrl: './login.page.html',
@@ -15,7 +18,8 @@ export class LoginPage implements OnInit {
         private storage: Storage,
         private navCtrl: NavController,
         private platform: Platform,
-        private menuCtrl: MenuController
+        private menuCtrl: MenuController,
+        private afAuth: AngularFireAuth
     ) {
 
     }
@@ -30,31 +34,25 @@ export class LoginPage implements OnInit {
             this.fb.login(['public_profile', 'email'])
                 .then((res: FacebookLoginResponse) => {
 
-                    this.fb.api('me?fields=id,name,email', []).then(data => {
+                    const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
 
-                        let input = {
-                            id: data.id,
-                            email: data.email
-                        };
-
-                        this.storage.set('sportSpirit.userLogged', input);
-
+                    firebase.auth().signInWithCredential(facebookCredential)
+                      .then(user => {
+                        this.storage.set('sportSpirit.userId', user.uid);
                         this.navCtrl.navigateRoot('/home');
-
-                    });
+                      });
 
                 })
                 .catch(e => console.log('Error logging into Facebook', e));
         }
         else{
-            let input = {
-                id: '1234567890',
-                email: '123@123.com'
-            };
 
-            this.storage.set('sportSpirit.userLogged', input);
-
-            this.navCtrl.navigateRoot('/home');
+          this.afAuth.auth
+            .signInWithPopup(new firebase.auth.FacebookAuthProvider())
+            .then(res => {
+              this.storage.set('sportSpirit.userId', res.user.uid);
+              this.navCtrl.navigateRoot('/home');
+            });
         }
 
     }

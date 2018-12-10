@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 
 import {ActivatedRoute} from "@angular/router";
 import {Storage} from '@ionic/storage';
+import {LoadingController} from '@ionic/angular';
+
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 declare var mapboxgl: any;
 
@@ -12,38 +17,19 @@ declare var mapboxgl: any;
 })
 export class ActivityPage implements OnInit {
 
-    id: number;
+    id: string;
     activity: any;
     map: any;
     activityColor: string;
-    startIcon: string;
+    //startIcon: string;
 
     constructor(
         private route: ActivatedRoute,
-        private storage: Storage
+        private storage: Storage,
+        private db: AngularFirestore,
+        private loadingController: LoadingController
     ) {
-        this.route.params.subscribe( params => {
-
-            this.id = Number(params.id);
-
-            this.storage.get('sportSpirit.activities').then(data => {
-                data.forEach((value: any) => {
-                    if(this.id == value.id){
-                        this.activity = value;
-                        this.activityColor = value.type === 1 ? '#f2d60d' : '#2EAC46';
-                        this.startIcon = value.type === 1 ? 'assets/img/running.png' : 'assets/img/cycling.png';
-
-                        this.activity.coordinates = [[20.8036, 41.1109],[20.8055,41.1111],[20.8040, 41.1151]];
-
-                        if(this.activity.coordinates.length){
-                            this.initMap();
-                        }
-
-                    }
-                });
-            });
-
-        });
+      this.loadData();
     }
 
     ngOnInit() {
@@ -52,6 +38,35 @@ export class ActivityPage implements OnInit {
 
     initMap(){
         this.createMap(this.activity.coordinates);
+    }
+
+    async loadData(){
+      const loading = await this.loadingController.create({});
+      await loading.present();
+      this.route.params.subscribe( params => {
+          this.id = params.id;
+          this.storage.get('sportSpirit.userId').then(uid => {
+            this.db.collection('users').doc(uid).collection('activities').doc(this.id).ref.get()
+              .then(doc => {
+                this.activity = doc.data();
+                this.activity.date = this.activity.date.toDate();
+                this.activityColor = this.activity.type === 1 ? '#f2d60d' : '#2EAC46';
+                let temp = [];
+                this.activity.coordinates.forEach(cord => {
+                  temp.push([cord.lng,cord.lat]);
+                });
+                this.activity.coordinates = temp;
+                //this.activity.coordinates = [[20.8036, 41.1109],[20.8055,41.1111],[20.8040, 41.1151]];
+
+                if(this.activity.coordinates.length)
+                    this.initMap();
+                loading.dismiss();
+              }).catch(err => {
+                loading.dismiss();
+                console.log(err);
+              });
+          });
+      });
     }
 
     private getMidpoint(cords){
@@ -83,7 +98,7 @@ export class ActivityPage implements OnInit {
                 .addTo(this.map);
             let el1: any = document.createElement('img');
             el1.className = 'marker';
-            el1.src = this.startIcon;
+            el1.src = this.activity.img;
             el1.style.width = '24px';
             el1.style.position = 'absolute';
             el1.style.left = '2px';

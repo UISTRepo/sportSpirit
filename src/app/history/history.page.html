@@ -9,14 +9,14 @@
 
 <ion-content>
 
-    <ion-card *ngIf="activities.length == 0">
+    <ion-card *ngIf="activities?.length == 0">
         <ion-card-content text-center>
             No history
         </ion-card-content>
     </ion-card>
 
-    <ion-list>
-        <ion-item style="position: relative" *ngFor="let item of activities" [href]="'/activity/' + item.id">
+    <ion-list *ngIf='activities'>
+        <ion-item *ngFor="let item of activities | async" [href]="'/activity/' + item.id">
             <ion-avatar slot="start">
                 <img [src]="item.img">
             </ion-avatar>
@@ -29,6 +29,7 @@
                 {{item.date | relativeTime}}
             </p>
         </ion-item>
+
     </ion-list>
 
 </ion-content>
