@@ -25,9 +25,9 @@ export class AppRoutingModule {
 
     constructor(private platform: Platform, private storage: Storage, private navCtrl: NavController){
         this.platform.ready().then(() => {
-            this.storage.get('sportSpirit.userLogged').then((data) => {
+            this.storage.get('sportSpirit.userId').then((data) => {
 
-                if(data && data.id){
+                if(data){
                     this.navCtrl.navigateRoot('/home');
                 }
                 else{

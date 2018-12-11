@@ -3,6 +3,9 @@ import {AlertController, Events} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
 import {TrackingService} from '../tracking/tracking.service';
 
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -27,7 +30,8 @@ export class TimerService {
         private events: Events,
         private tracking: TrackingService,
         private storage: Storage,
-        private alertController: AlertController
+        private alertController: AlertController,
+        private db: AngularFirestore
     ) {
         this.events.subscribe('storeDistance', (data) => {
 
@@ -44,16 +48,26 @@ export class TimerService {
 
     private saveActivity(data){
 
-        this.storage.get('sportSpirit.activities').then((activities: any) => {
+        data.totalTime = '';
+        if(data.timer.hours > 0)
+            data.totalTime += data.timer.hours + 'h ';
 
-            if(activities){
-                activities.push(data);
-                this.storage.set('sportSpirit.activities', activities);
-            }
-            else{
-                this.storage.set('sportSpirit.activities', [data]);
-            }
+        if(data.timer.minutes > 0)
+            data.totalTime += data.timer.minutes + 'm ';
 
+        if(data.timer.hours < 1)
+            data.totalTime += data.timer.seconds + 's ';
+
+        data.img = data.type == 1 ? 'assets/img/running.png' : 'assets/img/cycling.png';
+
+        let dbid = this.db.createId();
+
+        data.id = dbid;
+
+        this.storage.get('sportSpirit.userId').then(uid => {
+          console.log(uid);
+          this.db.collection('users').doc(uid).collection('activities').doc(dbid).set(data)
+            .then(res => console.log(res));
         });
     }
 

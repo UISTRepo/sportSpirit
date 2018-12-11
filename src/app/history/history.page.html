@@ -9,14 +9,15 @@
 
 <ion-content>
 
-    <ion-card *ngIf="activities.length == 0">
+    <ion-card *ngIf="activities?.length == 0">
         <ion-card-content text-center>
             No history
         </ion-card-content>
     </ion-card>
 
-    <ion-list>
-        <ion-item style="position: relative" *ngFor="let item of activities" [href]="'/activity/' + item.id">
+    <ion-list *ngIf='activities'>
+      <ion-item-sliding *ngFor="let item of activities | async" #slidingItem>
+        <ion-item style='background-color: white' [href]="'/activity/' + item.id">
             <ion-avatar slot="start">
                 <img [src]="item.img">
             </ion-avatar>
@@ -29,6 +30,13 @@
                 {{item.date | relativeTime}}
             </p>
         </ion-item>
+        <ion-item-options (ionSwipe)="delete(slidingItem, item)">
+          <ion-item-option color="danger" (click)="delete(slidingItem, item)">
+            <ion-icon slot="icon-only" color='light'  name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+
     </ion-list>
 
 </ion-content>

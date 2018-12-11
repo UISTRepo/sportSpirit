@@ -15,6 +15,7 @@
   "dependencies": {
     "@angular/common": "~7.0.0",
     "@angular/core": "~7.0.0",
+    "@angular/fire": "^5.1.1",
     "@angular/forms": "~7.0.0",
     "@angular/http": "~7.0.0",
     "@angular/platform-browser": "~7.0.0",
@@ -45,8 +46,10 @@
     "cordova.plugins.diagnostic": "4.0.10",
     "core-js": "^2.5.4",
     "date-fns": "^1.29.0",
+    "firebase": "^5.6.0",
     "mapbox-gl": "^0.52.0-beta.1",
     "rxjs": "~6.3.3",
+    "rxjs-compat": "~6.3.3",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -86,9 +89,9 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-facebooxk4": {
-        "APP_ID": "182573066028908",
-        "APP_NAME": "SportSpirit",
+      "cordova-plugin-facebook4": {
+        "APP_ID": "1480239715411826",
+        "APP_NAME": "Sport Spirit",
         "FACEBOOK_ANDROID_SDK_VERSION": "4.37.0"
       },
       "cordova-sqlite-storage": {},

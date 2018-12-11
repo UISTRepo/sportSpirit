@@ -8,7 +8,7 @@
 
 <ion-content>
 
-    <div text-center class="timerHolder">
+    <div text-center class="timerHolder" *ngIf='activity'>
 
         <div text-center>
             <ion-row no-padding>
@@ -33,7 +33,7 @@
     <div id='map'>
     </div>
 
-    <div class="theDate" text-center>
+    <div class="theDate" text-center *ngIf='activity'>
         {{activity?.date | date: 'mediumDate'}}
     </div>
 

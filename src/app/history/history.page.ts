@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {Storage} from '@ionic/storage';
 import {NavController} from '@ionic/angular';
 
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 @Component({
     selector: 'app-history',
     templateUrl: './history.page.html',
@@ -9,44 +13,28 @@ import {NavController} from '@ionic/angular';
 })
 export class HistoryPage implements OnInit {
 
-    activities: any = [];
+    activities: any;
+    uid: string;
 
     constructor(
         private storage: Storage,
-        private navCtrl: NavController
+        private navCtrl: NavController,
+        private db: AngularFirestore
     ) {
 
     }
 
     ngOnInit() {
-        this.storage.get('sportSpirit.activities').then(data => {
-            if(data){
-                data.forEach((value: any) => {
-                    value.totalTime = '';
-                    if(value.timer.hours > 0){
-                        value.totalTime += value.timer.hours + 'h ';
-                    }
 
-                    if(value.timer.minutes > 0)
-                        value.totalTime += value.timer.minutes + 'm ';
-
-                    if(value.timer.hours < 1){
-                        value.totalTime += value.timer.seconds + 's ';
-                    }
-                    
-                    value.img = value.type == 1 ? 'assets/img/running.png' : 'assets/img/cycling.png';
-
-                    this.activities.unshift(value);
-                });
-            }
-
-        })
+      this.storage.get('sportSpirit.userId').then(uid => {
+        this.uid = uid;
+        this.activities = this.db.collection('users').doc(this.uid).collection('activities', ref => ref.orderBy('date','desc')).valueChanges();
+      });
     }
 
-    delete(item){
-        this.activities = this.activities.filter((el) => {
-            return item.id !== el.id;
-        });
+    delete(slidingItem, item){
+      slidingItem.close();
+      this.db.collection('users').doc(this.uid).collection('activities').doc(item.id).delete();
     }
 
 }
