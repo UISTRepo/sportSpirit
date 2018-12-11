@@ -32,7 +32,8 @@ export class HistoryPage implements OnInit {
       });
     }
 
-    delete(item){
+    delete(slidingItem, item){
+      slidingItem.close();
       this.db.collection('users').doc(this.uid).collection('activities').doc(item.id).delete();
     }
 
